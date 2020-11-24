@@ -17,7 +17,32 @@ class Home extends Component {
       console.log(err);
     });
   }
-
+  filteredUsers() {
+    const search = this.state.search.toLowerCase();
+    return this.state.users.filter(user => {
+      return (
+        user.first.toLowerCase().includes(search) ||
+        user.last.toLowerCase().includes(search)
+      );
+    });
+  }
+  renderUsers = () => {
+    return this.filteredUsers()
+      .sort(this.sortUsers)
+      .map((user, index) => {
+        return (
+          <tr key={index}>
+            <td>
+              <img src={user.image} alt="user"></img>
+            </td>
+            <td>{user.first}</td>
+            <td>{user.last}</td>
+            <td>{user.email}</td>
+            <td>{new Date(user.dob).toDateString()}</td>
+          </tr>
+        );
+      });
+  };
   render() {
     const styles = {
       header: {
@@ -34,6 +59,10 @@ class Home extends Component {
         marginLeft: "1rem"
       }
     };
+
+    function handleClick(e) {
+      e.preventDefault();
+    }
     return (
       <div>
         <div className="App">
@@ -46,7 +75,7 @@ class Home extends Component {
           <h2 style={styles.search}>
             Search:
         </h2>
-          <Search style={styles.input}></Search>
+          <Search onClick={handleClick} style={styles.input}></Search>
         </div>
 
         <Table>
